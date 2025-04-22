@@ -1,0 +1,1 @@
+cd Dyspop; python3 ./app.py
