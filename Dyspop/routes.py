@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, login_user, logout_user
 from models import db, User, MoodEntry
 #jsonify Serializes the given arguments as JSON
 
@@ -7,6 +7,23 @@ def init_routes(app):
     @app.route('/', methods=['GET'])
     def home():
         return "Home Page!"
+
+    @app.route('/login', methods=['POST'])
+    def login():
+        #will return None instead of raising an error if using request.form[]
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if not username or not password:
+            return jsonify({'error': 'username and password are required'})
+
+        user = User.query.filter_by(username=username).first()
+
+        if user and user.check_password(password):
+            login_user(user)
+            return jsonify({"message": "Login successful!", "user": user.to_dict()}), 200
+        else:
+            return jsonify({'error': 'Invalid username or password'}), 401
 
     @app.route('/users', methods=['GET'])
     def get_users():
@@ -51,7 +68,7 @@ def init_routes(app):
 
     # Mood Entry Routes
     @app.route('/moods', methods=['POST'])
-    @login_required #need to login to create a mood
+    # @login_required #need to login to create a mood
     def create_mood():
         data = request.get_json()
         print("Mood received:", data)
@@ -65,20 +82,22 @@ def init_routes(app):
         return jsonify(new_mood.to_dict()), 201
 
     @app.route('/moods', methods = ['GET'])
-    @login_required
+    # @login_required
     def get_moods():
         #should get moods for currently logged-in user
         moods = MoodEntry.query.filter_by(user_id = current_user.id).order_by(MoodEntry.timestamp.desc()).all()
         return jsonify([mood.to_dict() for mood in moods])
 
+
     @app.route('/moods/<int:entry_id>', methods = ['GET'])
-    @login_required
+    # @login_required
     def get_mood_entry(entry_id):
         mood = MoodEntry.query.get_or_404(entry_id)
         return jsonify(mood.to_dict())
 
+
     @app.route('/moods/<int:entry_id>', methods = ['GET'])
-    @login_required
+    # @login_required
     def update_mood(entry_id):
         mood = MoodEntry.query.get_or_404(entry_id)
         data = request.get_json()
@@ -93,17 +112,10 @@ def init_routes(app):
 
 
     @app.route('/moods/<int:entry_id>', methods = ['DELETE'])
-    @login_required
+    # @login_required
     def delete_mood_entry(entry_id):
         mood = MoodEntry.query.get_or_404(entry_id)
         db.session.delete(mood)
         db.session.commit()
         return '', 204
 
- # @app.route('/users/<int:user_id>', methods=['DELETE'])
- #    def delete_user(user_id):
- #        user = User.query.get_or_404(user_id)
- #        db.session.delete(user)
- #        db.session.commit()
- #        return '', 204
- #
