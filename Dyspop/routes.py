@@ -67,15 +67,43 @@ def init_routes(app):
     @app.route('/moods', methods = ['GET'])
     @login_required
     def get_moods():
-        #should get moods for currently logged in user
+        #should get moods for currently logged-in user
         moods = MoodEntry.query.filter_by(user_id = current_user.id).order_by(MoodEntry.timestamp.desc()).all()
         return jsonify([mood.to_dict() for mood in moods])
 
+    @app.route('/moods/<int:entry_id>', methods = ['GET'])
+    @login_required
+    def get_mood_entry(entry_id):
+        mood = MoodEntry.query.get_or_404(entry_id)
+        return jsonify(mood.to_dict())
+
+    @app.route('/moods/<int:entry_id>', methods = ['GET'])
+    @login_required
+    def update_mood(entry_id):
+        mood = MoodEntry.query.get_or_404(entry_id)
+        data = request.get_json()
+        if 'mood_name' in data:
+            mood.mood_name = data['mood_name']
+        if 'mood_rating' in data:
+            mood.mood_rating = int(data['mood_rating'])
+        if 'notes' in data:
+            mood.notes = data['notes']
+        db.session.commit()
+        return jsonify(mood.to_dict())
 
 
 
-
-        # @app.route('/users/<int:user_id>', methods=['GET'])
-        # def get_user(user_id):
+        # @app.route('/users/<int:user_id>', methods=['PUT'])
+        # def update_user(user_id):
         #     user = User.query.get_or_404(user_id)
+        #     data = request.get_json()
+        #
+        #     if 'username' in data:
+        #         user.username = data['username']
+        #     if 'email' in data:
+        #         user.email = data['email']
+        #     if 'password' in data:
+        #         user.set_password(data['password'])
+        #
+        #     db.session.commit()
         #     return jsonify(user.to_dict())
