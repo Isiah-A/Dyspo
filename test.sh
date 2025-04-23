@@ -10,8 +10,40 @@ curl http://127.0.0.1:5000/users/1
 # Update a user
 curl -X PUT -H "Content-Type: application/json" -d '{"email":"john.updated@example.com"}' http://127.0.0.1:5000/users/1
 
-# Create a mood
-curl -X POST -H "Content-Type: application/json" -d '{"mood_name":"Happy","mood_rating":5, "notes":"Feeling okay because I got this to work in a day."}' http://127.0.0.1:5000/moods
+#Define a file to store cookies
+COOKIE_FILE="cookie.txt"
+
+# Login with the created user
+# Use the credentials from the 'Create a user' step
+echo "Attempting login..."
+curl -X POST \
+     -d "username=john&password=password123" \
+     -c $COOKIE_FILE \
+     http://127.0.0.1:5000/login
+
+
+# Create a mood *using the saved login session*
+echo "Attempting to create mood..."
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -d '{"mood_name":"Happy","mood_rating":5, "notes":"Feeling okay because I got this to work in a day."}' \
+     -b $COOKIE_FILE \
+     http://127.0.0.1:5000/moods
+
+echo "Attempting to delete mood"
+curl -X DELETE \
+     -b $COOKIE_FILE \
+     http://127.0.0.1:5000/moods/1
+
+# Logout the user *using the saved login session*
+echo "Attempting logout..."
+curl -X POST \
+     -b $COOKIE_FILE \
+     http://127.0.0.1:5000/logout
+
+
+#remove cookie file
+rm $COOKIE_FILE
 
 # Delete a user
 curl -X DELETE http://127.0.0.1:5000/users/1

@@ -1,9 +1,17 @@
 from flask import request, jsonify
-from flask_login import login_required, current_user, login_user, logout_user
+from flask_login import login_manager, login_required, current_user, login_user, logout_user, LoginManager
 from models import db, User, MoodEntry
 #jsonify Serializes the given arguments as JSON
 
+login_manager = LoginManager()
+
 def init_routes(app):
+
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
     @app.route('/', methods=['GET'])
     def home():
         return "Home Page!"
@@ -24,6 +32,12 @@ def init_routes(app):
             return jsonify({"message": "Login successful!", "user": user.to_dict()}), 200
         else:
             return jsonify({'error': 'Invalid username or password'}), 401
+
+    @app.route('/logout', methods=["POST"])
+    @login_required
+    def logout():
+        logout_user()
+        return jsonify({"message": "Logout successful!"}), 200
 
     @app.route('/users', methods=['GET'])
     def get_users():

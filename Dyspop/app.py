@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_login import LoginManager
 from models import db, User
 from os import path
 from routes import init_routes
@@ -10,9 +11,15 @@ def create_app():
     app.config['SECRET_KEY'] = 'isiah'
     app.config['SITE_NAME'] = "Dyspo"
     app.config['SITE_DESCRIPTION'] = 'Track your feelingsssss!'
+    login_manager = LoginManager()
+    login_manager.init_app(app)
 
     #Initialize the extension with the app
     db.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(userid):
+        return User.query.get(int(userid))
 
     #Register all routes
     init_routes(app)
