@@ -51,7 +51,7 @@ def init_routes(app):
 
     # Mood Entry Routes
     @app.route('/moods', methods=['POST'])
-    @login_required
+    @login_required #need to login to create a mood
     def create_mood():
         data = request.get_json()
         print("Mood received:", data)
@@ -64,11 +64,18 @@ def init_routes(app):
         db.session.commit()
         return jsonify(new_mood.to_dict()), 201
 
+    @app.route('/moods', methods = ['GET'])
+    @login_required
+    def get_moods():
+        #should get moods for currently logged in user
+        moods = MoodEntry.query.filter_by(user_id = current_user.id).order_by(MoodEntry.timestamp.desc()).all()
+        return jsonify([mood.to_dict() for mood in moods])
 
-    # def create_user():
-    #     data = request.get_json()
-    #     print("data received:", data)
-    #     new_user = User(username=data['username'], email=data['email'], password=data['password']) #added password
-    #     db.session.add(new_user)
-    #     db.session.commit()
-    #     return jsonify(new_user.to_dict()), 201
+
+
+
+
+        # @app.route('/users/<int:user_id>', methods=['GET'])
+        # def get_user(user_id):
+        #     user = User.query.get_or_404(user_id)
+        #     return jsonify(user.to_dict())
