@@ -1,10 +1,12 @@
 from flask import request, jsonify
+from flask_login import login_required, current_user
+
 from models import db, User, MoodEntry
 
 def init_routes(app):
-    @app.route('/hi', methods=['GET'])
-    def hi():
-        return "Hello, World!"
+    @app.route('/', methods=['GET'])
+    def home():
+        return "Home Page!"
 
     @app.route('/users', methods=['GET'])
     def get_users():
@@ -20,7 +22,7 @@ def init_routes(app):
     def create_user():
         data = request.get_json()
         print("data received:", data)
-        new_user = User(username=data['username'], email=data['email'])
+        new_user = User(username=data['username'], email=data['email'], password=data['password']) #added password
         db.session.add(new_user)
         db.session.commit()
         return jsonify(new_user.to_dict()), 201
@@ -34,6 +36,8 @@ def init_routes(app):
             user.username = data['username']
         if 'email' in data:
             user.email = data['email']
+        if 'password' in data:
+            user.set_password(data['password'])
 
         db.session.commit()
         return jsonify(user.to_dict())
@@ -44,3 +48,27 @@ def init_routes(app):
         db.session.delete(user)
         db.session.commit()
         return '', 204
+
+    # Mood Entry Routes
+    @app.route('/moods', methods=['POST'])
+    @login_required
+    def create_mood():
+        data = request.get_json()
+        print("Mood received:", data)
+        new_mood = MoodEntry(
+            user_id = current_user.id,
+            mood_name = data['mood_name'],
+            mood_rating = int(data['mood_rating']),
+            notes = data.get('notes'))
+        db.session.add(new_mood)
+        db.session.commit()
+        return jsonify(new_mood.to_dict()), 201
+
+
+    # def create_user():
+    #     data = request.get_json()
+    #     print("data received:", data)
+    #     new_user = User(username=data['username'], email=data['email'], password=data['password']) #added password
+    #     db.session.add(new_user)
+    #     db.session.commit()
+    #     return jsonify(new_user.to_dict()), 201
