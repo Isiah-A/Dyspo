@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from flask_login import login_required, current_user
-
 from models import db, User, MoodEntry
+#jsonify Serializes the given arguments as JSON
 
 def init_routes(app):
     @app.route('/', methods=['GET'])
@@ -92,18 +92,18 @@ def init_routes(app):
         return jsonify(mood.to_dict())
 
 
+    @app.route('/moods/<int:entry_id>', methods = ['DELETE'])
+    @login_required
+    def delete_mood_entry(entry_id):
+        mood = MoodEntry.query.get_or_404(entry_id)
+        db.session.delete(mood)
+        db.session.commit()
+        return '', 204
 
-        # @app.route('/users/<int:user_id>', methods=['PUT'])
-        # def update_user(user_id):
-        #     user = User.query.get_or_404(user_id)
-        #     data = request.get_json()
-        #
-        #     if 'username' in data:
-        #         user.username = data['username']
-        #     if 'email' in data:
-        #         user.email = data['email']
-        #     if 'password' in data:
-        #         user.set_password(data['password'])
-        #
-        #     db.session.commit()
-        #     return jsonify(user.to_dict())
+ # @app.route('/users/<int:user_id>', methods=['DELETE'])
+ #    def delete_user(user_id):
+ #        user = User.query.get_or_404(user_id)
+ #        db.session.delete(user)
+ #        db.session.commit()
+ #        return '', 204
+ #
