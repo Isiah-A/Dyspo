@@ -1,60 +1,108 @@
+//const API_URL = `http://localhost:8080`;
+//
+//function fetchData() {
+//   fetch(`${API_URL}/moods`)
+//        .then(res => res.json())
+//        .then(data => {
+//            show(data);
+//        })
+//        .catch(error => {
+//            console.error(`Error Fetching entries: ${error}`);
+//            document.getElementById('mood-list').innerHTML = 'Error Loading Entries';
+//
+//        });
+//}
+//
+//// takes a UNIX integer date, and produces a prettier human string
+////function dateOf(date) {
+////  const milliseconds = date * 1000; // 1575909015000
+////  const dateObject = new Date(milliseconds);
+////  const humanDateFormat = dateObject.toLocaleString(); //2019-12-9 10:30:15
+////  return humanDateFormat;
+////}
+//
+//function show(data) {
+//  // the data parameter will be a JS array of JS objects
+//  // this uses a combination of "HTML building" DOM methods (the document createElements) and
+//  // simple string interpolation (see the 'a' tag on title)
+//  // both are valid ways of building the html.
+//  const entriesListDiv = document.getElementById('mood-list');
+//  const list = document.createDocumentFragment();
+////  console.log('Data:', data);
+//
+//  data.map(function (mood_entry) {
+//     let li = document.createElement('li');
+//        let title = document.createElement('h3');
+//        title.innerHTML = `${mood_entry.mood_name}`;
+//
+////        let details = document.createElement('p');
+////        details.textContent = `Rating ${mood_entry.mood_rating}`;
+//
+//
+//        li.appendChild(title);
+//        list.appendChild(li);
+//
+//
+//      });
+//
+//        entriesListDiv.appendChild(list);
+//}
+//
+//function handlePage() {
+//    console.log('load all moods');
+//    fetchData();
+//}
+//
+//handlePage();
+
 const API_URL = `http://localhost:8080`;
 
-function fetchData() {
-  fetch(`${API_URL}/piroapp`)
-    .then(res => {
-      //let resstr = res.json();
-      //console.log("res is ", resstr);
-      return res.json();
-    })
-    .then(data => {
-      show(data);
-    })
-    .catch(error => {
-      errm = `Error Fetching data : ${error}`
-      console.log(errm);
-      document.getElementById('posts').innerHTML = errm;
-    });
+function fetchEntriesData() {
+    fetch(`${API_URL}/moods`)
+        .then(res => res.json())
+        .then(data => {
+            showEntryList(data);
+        })
+        .catch(error => {
+            console.error(`Error Fetching entries: ${error}`);
+            document.getElementById('entries-list').innerHTML = 'Error Loading Entries';
+
+        });
 }
 
-// takes a UNIX integer date, and produces a prettier human string
-//function dateOf(date) {
-//  const milliseconds = date * 1000; // 1575909015000
-//  const dateObject = new Date(milliseconds);
-//  const humanDateFormat = dateObject.toLocaleString(); //2019-12-9 10:30:15
-//  return humanDateFormat;
-//}
+function showEntryList(data) {
+    const entriesListDiv = document.getElementById('entries-list');
+    const list = document.createDocumentFragment();
 
-function show(data) {
-  // the data parameter will be a JS array of JS objects
-  // this uses a combination of "HTML building" DOM methods (the document createElements) and
-  // simple string interpolation (see the 'a' tag on title)
-  // both are valid ways of building the html.
-  const ul = document.getElementById('mood-list');
-  const list = document.createDocumentFragment();
-  //console.log('Data:', data);
-
-  data.map(function (mood) {
-     let div = document.createElement('div');
+    data.map(function (entry) {
+        let div = document.createElement('div');
         let title = document.createElement('h3');
-        title.textContent = mood_entry.mood_name || 'No Title';
+        title.innerHTML = `${entry.mood_name}`;
 
-        let details = document.createElement('p');
-        details.textContent = `Rating ${mood_entry.mood_rating}`;
+//        let element1 = document.createElement('p');
+//        element1.textContent = `element: ${entry.element1}`;
+//
+//        let species = document.createElement('p');
+//        species.textContent = `Spieces: ${entry.species}`;
 
+        // let viewLink = document.createElement('a');
+        // viewLink.href = `/aetheriondetail.html?entryid=${entry.id}`;
+        // viewLink.textContent = 'View Details';
 
         div.appendChild(title);
+//        div.appendChild(element1);
+//        div.appendChild(species);
+        // div.appendChild(viewLink);
+
         list.appendChild(div);
+    });
 
-
-      });
-
-        entriesListDiv.appendChild(list);
+    entriesListDiv.appendChild(list);
 }
 
 function handlePage() {
     console.log('load all entries');
-    fetchData();
+    fetchEntriesData();
 }
 
 handlePage();
