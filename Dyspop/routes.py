@@ -81,56 +81,57 @@ def init_routes(app):
     #     return '', 204
 
     # Mood Entry Routes
-    @app.route('/moods', methods=['POST'])
-    # @login_required #need to login to create a mood
-    def create_mood():
-        data = request.get_json()
-        print("Mood received:", data)
-        new_mood = MoodEntry(
-            # user_id = current_user.id,
-            mood_name = data['mood_name'],
-            mood_rating = int(data['mood_rating']),
-            notes = data.get('notes'))
-        db.session.add(new_mood)
-        db.session.commit()
-        return jsonify(new_mood.to_dict()), 201
+    # @app.route('/moods', methods=['POST'])
+    # # @login_required #need to login to create a mood
+    # def create_mood():
+    #     data = request.get_json()
+    #     print("Mood received:", data)
+    #     new_mood = MoodEntry(
+    #         # user_id = current_user.id,
+    #         mood_name = data['mood_name'],
+    #         mood_rating = int(data['mood_rating']),
+    #         notes = data.get('notes'))
+    #     db.session.add(new_mood)
+    #     db.session.commit()
+    #     return jsonify(new_mood.to_dict()), 201
+
 
     @app.route('/moods', methods = ['GET'])
     # @login_required
     def get_moods():
         #should get moods for currently logged-in user
-        moods = MoodEntry.query.order_by(MoodEntry.timestamp.desc()).all()
+        moods = MoodEntry.query.all()
         # moods = MoodEntry.query.filter_by(user_id = current_user.id).order_by(MoodEntry.timestamp.desc()).all()
         return jsonify([mood.to_dict() for mood in moods])
 
 
-    @app.route('/moods/<int:entry_id>', methods = ['GET'])
-    # @login_required
-    def get_mood_entry(entry_id):
-        mood = MoodEntry.query.get_or_404(entry_id)
-        return jsonify(mood.to_dict())
-
-
-    @app.route('/moods/<int:entry_id>', methods = ['GET'])
-    # @login_required
-    def update_mood(entry_id):
-        mood = MoodEntry.query.get_or_404(entry_id)
-        data = request.get_json()
-        if 'mood_name' in data:
-            mood.mood_name = data['mood_name']
-        if 'mood_rating' in data:
-            mood.mood_rating = int(data['mood_rating'])
-        if 'notes' in data:
-            mood.notes = data['notes']
-        db.session.commit()
-        return jsonify(mood.to_dict())
-
-
-    @app.route('/moods/<int:entry_id>', methods = ['DELETE'])
-    # @login_required
-    def delete_mood_entry(entry_id):
-        mood = MoodEntry.query.get_or_404(entry_id)
-        db.session.delete(mood)
-        db.session.commit()
-        return '', 204
-
+    # @app.route('/moods/<int:entry_id>', methods = ['GET'])
+    # # @login_required
+    # def get_mood_entry(entry_id):
+    #     mood = MoodEntry.query.get_or_404(entry_id)
+    #     return jsonify(mood.to_dict())
+    #
+    #
+    # @app.route('/moods/<int:entry_id>', methods = ['GET'])
+    # # @login_required
+    # def update_mood(entry_id):
+    #     mood = MoodEntry.query.get_or_404(entry_id)
+    #     data = request.get_json()
+    #     if 'mood_name' in data:
+    #         mood.mood_name = data['mood_name']
+    #     if 'mood_rating' in data:
+    #         mood.mood_rating = int(data['mood_rating'])
+    #     if 'notes' in data:
+    #         mood.notes = data['notes']
+    #     db.session.commit()
+    #     return jsonify(mood.to_dict())
+    #
+    #
+    # @app.route('/moods/<int:entry_id>', methods = ['DELETE'])
+    # # @login_required
+    # def delete_mood_entry(entry_id):
+    #     mood = MoodEntry.query.get_or_404(entry_id)
+    #     db.session.delete(mood)
+    #     db.session.commit()
+    #     return '', 204
+    #

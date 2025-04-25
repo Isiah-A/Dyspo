@@ -36,11 +36,17 @@ def create_app():
 def pop_db():
     with app.app_context():
         if MoodEntry.query.count() == 0:
+            # make_entry = MoodEntry.__table__.insert().values([
+            #     { 'id': 1, 'mood_name': 'happy', 'mood_rating': 4, 'notes': 'I laughed today so that is good.'},
+            #     { 'id': 2, 'mood_name': 'sad', 'mood_rating': 1, 'notes': 'Well, thats not gonna go away anytime soon.'},
+            #     { 'id': 3, 'mood_name': 'annoyed', 'mood_rating': 10, 'notes': 'If I think about something long enough I get annoyed.'},
+            #     { 'id': 4, 'mood_name': 'excited', 'mood_rating': 7, 'notes': 'Im gonna work on some sql stuff today, maybe.'}
+            # ])
             make_entry = MoodEntry.__table__.insert().values([
-                { 'mood_name': 'happy', 'mood_rating': 4, 'notes': 'I laughed today so that is good.'},
-                {  'mood_name': 'sad', 'mood_rating': 1, 'notes': 'Well, thats not gonna go away anytime soon.'},
-                { 'mood_name': 'annoyed', 'mood_rating': 10, 'notes': 'If I think about something long enough I get annoyed.'},
-                { 'mood_name': 'excited', 'mood_rating': 7, 'notes': 'Im gonna work on some sql stuff today, maybe.'}
+                {'id': 1, 'name': 'happy', 'rating': 4},
+                {'id': 2, 'name': 'sad', 'rating': 1 },
+                {'id': 3, 'name': 'annoyed', 'rating': 10},
+                {'id': 4, 'name': 'excited', 'rating': 7}
             ])
             db.session.execute(make_entry)
             db.session.commit()

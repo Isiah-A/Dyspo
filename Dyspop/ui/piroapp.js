@@ -66,7 +66,6 @@ function fetchEntriesData() {
         .catch(error => {
             console.error(`Error Fetching entries: ${error}`);
             document.getElementById('entries-list').innerHTML = 'Error Loading Entries';
-
         });
 }
 
@@ -77,22 +76,27 @@ function showEntryList(data) {
     data.map(function (entry) {
         let div = document.createElement('div');
         let title = document.createElement('h3');
-        title.innerHTML = `${entry.mood_name}`;
+        title.textContent = entry.mood_name;
 
-//        let element1 = document.createElement('p');
-//        element1.textContent = `element: ${entry.element1}`;
+//        let details = document.createElement('p');
+//        details.textContent = `Rating ${entry.rating}`;
 //
-//        let species = document.createElement('p');
-//        species.textContent = `Spieces: ${entry.species}`;
+//        let imdbLink = document.createElement('a');
+//        imdbLink.href = `${entry.link}`;
+//        imdbLink.textContent = 'IMDb Link';
+//
+//        let genres = document.createElement('p');
+//        genres.textContent = `Genres: ${entry.genres.join(', ')}`;
 
-        // let viewLink = document.createElement('a');
-        // viewLink.href = `/aetheriondetail.html?entryid=${entry.id}`;
-        // viewLink.textContent = 'View Details';
+        let viewLink = document.createElement('a');
+        viewLink.href = `/ui/entry_detail.html?entryid=${entry.id}`;
+        viewLink.textContent = 'View Details';
 
         div.appendChild(title);
-//        div.appendChild(element1);
-//        div.appendChild(species);
-        // div.appendChild(viewLink);
+//        div.appendChild(details);
+//        div.appendChild(imdbLink);
+//        div.appendChild(genres);
+//        div.appendChild(viewLink);
 
         list.appendChild(div);
     });
