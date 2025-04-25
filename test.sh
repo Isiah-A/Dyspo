@@ -2,7 +2,7 @@
 curl http://127.0.0.1:5000/users
 
 # Create a user
-curl -X POST -H "Content-Type: application/json" -d '{"username":"john","email":"john@example.com", "password":"password123"}' http://127.0.0.1:5000/users
+curl -X POST -H "Content-Type: application/json" -d '{"username":"john","email":"john@example.com", "password":"password123"}' http://127.0.0.1:8080/users
 
 # Get a specific user
 curl http://127.0.0.1:5000/users/1
@@ -19,16 +19,22 @@ echo "Attempting login..."
 curl -X POST \
      -d "username=john&password=password123" \
      -c $COOKIE_FILE \
-     http://127.0.0.1:5000/login
+     http://127.0.0.1:8080/login
 
 
 # Create a mood *using the saved login session*
 echo "Attempting to create mood..."
 curl -X POST \
      -H "Content-Type: application/json" \
-     -d '{"mood_name":"Happy","mood_rating":5, "notes":"Feeling okay because I got this to work in a day."}' \
+     -d '{"mood_name":"Tried","mood_rating":7, "notes":"Need more sleep."}' \
      -b $COOKIE_FILE \
      http://127.0.0.1:5000/moods
+
+# Get the logged-in user's moods *using the saved login session*
+echo "Attempting to get user's moods..."
+curl -X GET \
+     -b $COOKIE_FILE \
+     http://127.0.0.1:8080/moods
 
 echo "Attempting to delete mood"
 curl -X DELETE \

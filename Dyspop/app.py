@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_login import LoginManager
-from models import db, User
+from models import db, User, MoodEntry
 from os import path
 from routes import init_routes
 
@@ -9,8 +9,6 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'isiah'
-    app.config['SITE_NAME'] = "Dyspo"
-    app.config['SITE_DESCRIPTION'] = 'Track your feelingsssss!'
     login_manager = LoginManager()
     login_manager.init_app(app)
 
@@ -32,9 +30,26 @@ def create_app():
 
     return app
 
+
+def pop_db():
+    with app.app_context():
+        if MoodEntry.query.count() == 0:
+            make_entry = MoodEntry.__table__.insert().values([
+                {'user_id': 1,  'mood_name': 'happy', 'mood_rating': 4, 'notes': 'I laughed today so that is good.'},
+                {'user_id': 1,  'mood_name': 'sad', 'mood_rating': 1, 'notes': 'Well, thats not gonna go away anytime soon.'},
+                {'user_id': 1,  'mood_name': 'annoyed', 'mood_rating': 10, 'notes': 'If I think about something long enough I get annoyed.'},
+                {'user_id': 1,  'mood_name': 'excited', 'mood_rating': 7, 'notes': 'Im gonna work on some sql stuff today, maybe.'}
+            ])
+            db.session.execute(make_entry)
+            db.session.commit()
+            print("Database has been populated.")
+        else:
+            print("Database is already populated.")
+
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True)
+    pop_db()
+    app.run(port=8080 ,debug=True)
 
 
 

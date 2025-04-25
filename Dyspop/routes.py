@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from flask_login import login_manager, login_required, current_user, login_user, logout_user, LoginManager
 from models import db, User, MoodEntry
 #jsonify Serializes the given arguments as JSON
