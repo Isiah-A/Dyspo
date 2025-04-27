@@ -76,7 +76,7 @@ function showEntryList(data) {
     data.map(function (entry) {
         let div = document.createElement('div');
         let title = document.createElement('h3');
-        title.textContent = entry.mood_name;
+        title.textContent = entry.name;
 
 //        let details = document.createElement('p');
 //        details.textContent = `Rating ${entry.rating}`;
