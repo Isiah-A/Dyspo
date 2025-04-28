@@ -1,4 +1,3 @@
-// /Users/isiah/PycharmProjects/PassionProject/Dyspop/ui/moodcreate.js
 const API_URL = `http://localhost:8080`;
 
 // Handles the form submission event

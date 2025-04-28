@@ -1,63 +1,41 @@
 <!doctype html>
-<html>
-  <head>
-    <title>Add a Mood</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add New Mood</title>
     <link rel="stylesheet" href="./koley.css?v=1" />
-  </head>
-  <body>
-    <h1>Add a Mood</h1>
+</head>
+<body>
+    <h1>Enter a New Mood</h1>
+
+    <!-- The form ID must match the one in moodcreate.js -->
     <form id="addpiroform">
-      <label for="title">Title:</label>
-      <input type="text" id="title" name="title" required />
-
-      <label for="description">Description:</label>
-      <input type="text" id="description" name="description" />
-
-      <label for="s3urltovideo">S3 URL to Video:</label>
-      <input type="text" id="s3urltovideo" name="s3urltovideo" />
-
-      <input type="button" id="button1" onclick="doPostOfForm()" value="Add Piro" />
+        <div>
+            <label for="mood-name">Mood Name:</label>
+            <!-- 'name' attribute should match expected backend field -->
+            <input type="text" id="mood-name" name="name" required>
+        </div>
+        <div>
+            <label for="mood-rating">Rating (1-10):</label>
+            <!-- 'name' attribute should match expected backend field -->
+            <input type="number" id="mood-rating" name="rating" min="1" max="10" required>
+        </div>
+        <div>
+            <label for="mood-notes">Notes (Optional):</label>
+            <!-- 'name' attribute should match expected backend field -->
+            <textarea id="mood-notes" name="notes" rows="3"></textarea>
+        </div>
+        <div>
+            <button type="submit" id="button1">Add Mood</button>
+        </div>
     </form>
-    <script src="./moodcreate.js"></script>
-  </body>
-</html>
-<!-- 
 
-<script>
-    // generated
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.querySelector('form');
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const title = document.getElementById('title').value;
-            const description = document.getElementById('description').value;
-            const s3urltovideo = document.getElementById('s3urltovideo').value;
-            const created = document.getElementById('created').value;
-            
-            const data = {
-                title: title,
-                description: description,
-                s3urltovideo: s3urltovideo,
-                created: created
-            };
-            
-            fetch('/piro/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
-                console.log('Data added successfully:', result);
-                // Add any additional logic or UI updates here
-            })
-            .catch(error => {
-                console.error('Error adding data:', error);
-                // Handle any error scenarios here
-            });
-        });
-    });
-</script> -->
+    <hr>
+    <a href="/moodlist.html">Back to Mood List</a> <!-- Or wherever your list is -->
+
+
+    <script src="./moodcreate.js"></script>
+</body>
+</html>

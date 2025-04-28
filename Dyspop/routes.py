@@ -88,8 +88,8 @@ def init_routes(app):
         print("Mood received:", data)
         new_mood = MoodEntry(
             # user_id = current_user.id,
-            mood_name = data['mood_name'],
-            mood_rating = int(data['mood_rating']),
+            name = data['name'],
+            rating = int(data['rating']),
             notes = data.get('notes'))
         db.session.add(new_mood)
         db.session.commit()
