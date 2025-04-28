@@ -1,50 +1,74 @@
+// /Users/isiah/PycharmProjects/PassionProject/Dyspop/ui/moodcreate.js
 const API_URL = `http://localhost:8080`;
 
-function doPostOfForm(event) {
-  //event.preventDefault();
-  var floozy = new FormData(document.getElementById('addpiroform'));
+// Handles the form submission event
+function handleFormSubmit(event) {
+  event.preventDefault(); // Prevent the default form submission which reloads the page
 
-  var object = {};
-  for (var p of floozy) {
-    let name = p[0];
-    let value = p[1];
-    object[name] = value;
-  }
-  object['created'] = Date.now().toString();
-  console.log('object is ', object);
-  var json = JSON.stringify(object);
-  // only need to stringify once
-  postJSON(json);
+  // Get form data using the correct form ID
+  const form = document.getElementById('addpiroform');
+  const formData = new FormData(form);
+
+  // Convert FormData to a plain JavaScript object
+  const moodData = {};
+  formData.forEach((value, key) => {
+    // Ensure rating is stored as a number if needed, though backend handles int()
+    moodData[key] = key === 'rating' ? parseInt(value, 10) : value;
+  });
+
+  console.log('Sending mood data:', moodData);
+
+  // Convert the object to a JSON string
+  const jsonPayload = JSON.stringify(moodData);
+
+  // Call the function to POST the JSON data
+  postMoodData(jsonPayload);
 }
 
-async function postJSON(data) {
+// Sends the JSON data to the backend API
+async function postMoodData(jsonData) {
   try {
-    const response = await fetch(`${API_URL}/piroapp`, {
-      method: 'POST', // or 'PUT'
+    // Correct API endpoint for creating moods
+    const response = await fetch(`${API_URL}/moods`, {
+      method: 'POST',
       headers: {
-        accept: '*/*',
+        // Let the browser set Content-Type for FormData if sending that directly,
+        // but for JSON, we set it explicitly.
         'Content-Type': 'application/json',
+        'Accept': 'application/json' // Indicate we expect JSON back
       },
-      body: data, // This was ALSO Stringifying the data
-      // body: JSON.stringify(data)
-      // but this is already a string because I did the stringify above
+      body: jsonData, // Send the JSON string as the body
     });
+
+    // Check if the request was successful (status code 2xx)
+    if (!response.ok) {
+        // If not successful, try to parse error response from backend
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error occurred' }));
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.error || 'Failed to add mood'}`);
+    }
 
     const result = await response.json();
     console.log('Success:', result);
+    alert('Mood added successfully!'); // Give user feedback
+    // Optionally redirect or clear the form
+    window.location.href = '/ui/moodlist.html'; // Redirect to the list page
+
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error posting mood:', error);
+    alert(`Error adding mood: ${error.message}`); // Show error to user
   }
 }
 
-window.addEventListener(
-  'DOMContentLoaded',
-  function () {
+// Add event listener when the DOM is ready
+window.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('addpiroform');
-    const button1 = document.getElementById('button1');
-    console.log('form is ', form, 'button1 is ', button1, 'doPostOfForm is ', doPostOfForm);
-
-    form.addEventListener(button1, doPostOfForm);
+    if (form) {
+      // Listen for the 'submit' event on the FORM, not a click on the button
+      form.addEventListener('submit', handleFormSubmit);
+      console.log('Form event listener attached.');
+    } else {
+      console.error('Form with ID "addpiroform" not found!');
+    }
   },
   false,
 );
