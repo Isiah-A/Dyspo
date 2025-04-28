@@ -42,10 +42,10 @@ db = SQLAlchemy()
 class MoodEntry(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
-    # timestamp = db.Column(db.DateTime, default = datetime.datetime.now, nullable = False)
+    timestamp = db.Column(db.DateTime, default = datetime.datetime.now, nullable = False)
     name = db.Column(db.String(25), unique = False, nullable = False)
     rating = db.Column(db.Integer, nullable = False)
-    # notes = db.Column(db.String(100), nullable = True)
+    notes = db.Column(db.String(100), nullable = True)
 
     def __repr__(self):
         return f"<MoodEntry {self.mood_name}>"
@@ -54,8 +54,8 @@ class MoodEntry(db.Model):
         return {
             "id": self.id,
             # "user_id": self.user_id,
-            # "timestamp": self.timestamp,
+            "timestamp": self.timestamp,
             "name": self.name,
-            "rating": self.rating
-            # "notes": self.notes
+            "rating": self.rating,
+            "notes": self.notes
         }

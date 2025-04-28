@@ -112,7 +112,7 @@ def init_routes(app):
         return jsonify(mood.to_dict())
 
 
-    @app.route('/moods/<int:entry_id>', methods = ['GET'])
+    @app.route('/moods/<int:entry_id>', methods = ['PUT'])
     # @login_required
     def update_mood(entry_id):
         mood = MoodEntry.query.get_or_404(entry_id)
