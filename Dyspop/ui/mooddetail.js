@@ -42,6 +42,10 @@ function showMoodDetail(entry) {
   const ul = document.getElementById('Entry');
   const detail = document.createDocumentFragment();
 
+//  let viewlink = doucment.createElement('a');
+//  viewlink.href = `/Dyspop/mooddetail.html?entryid=${entry.id}`;
+//  viewlink.textContext = 'View Details';
+
   console.log('Mood Entry Data:', entry);
    // elements to display the mood details
   let li = document.createElement('li');
@@ -59,6 +63,7 @@ function showMoodDetail(entry) {
 
 
   li.appendChild(name);
+//  li.appendChild(viewlink);
   li.appendChild(rating);
   li.appendChild(notes);
   li.appendChild(timestamp)

@@ -48,7 +48,7 @@ class MoodEntry(db.Model):
     notes = db.Column(db.String(100), nullable = True)
 
     def __repr__(self):
-        return f"<MoodEntry {self.mood_name}>"
+        return f"<MoodEntry {self.name}>"
 
     def to_dict(self):
         return {
