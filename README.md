@@ -1,4 +1,4 @@
-# PassionProject
+# Dyspo
 
 
 Dispo Is your new Disposition tracking app. With Dispo you can log how you’re feeling throughout the day. You can input data whenever you want or the app can notify you throughout the day to track how you’re doing with user created categories and a 1 - 5 ranking. The app will ask you to fill out a form that has multiple data points. The data will then be visualized for you to look at and track how changes in your life can change how you feel. 
